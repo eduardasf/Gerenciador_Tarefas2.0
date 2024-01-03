@@ -26,13 +26,12 @@ namespace Tarefass.View
                     case 1:
                         Console.Clear();
                         Console.WriteLine("***ADICIONAR TAREFAS***");
-
                         Console.Write("Insira a descrição da tarefa: ");
                         tarefa.Descricao = Console.ReadLine();
-
-                        Console.Write("Insira o status da tarefa: ");
-                        tarefa.Estado = Console.ReadLine();
-                        _tarefaController.Adicionar(tarefa.Descricao, tarefa.Estado);
+                        Console.Write("\nInsira o status da tarefa:\n1 - Pendente\n2 - Em andamento\n3 - Concluído\nResposta: ");
+                        int op = int.Parse(Console.ReadLine());
+                        tarefa.Status = op;
+                        _tarefaController.AdicionarTarefa(tarefa.Descricao, tarefa.Status);
                         break;
                     case 2:
                         Console.Clear();
@@ -57,9 +56,10 @@ namespace Tarefass.View
                         /*Console.Write("Insira a nova descrição da tarefa: ");
                         string novaDescricao = Console.ReadLine();*/
 
-                        Console.Write("Insira o novo estado da tarefa: ");
-                        string novoEstado = Console.ReadLine();
-                        _tarefaController.ModificarTarefa(codigo,/*novaDescricao*/ novoEstado);
+                        Console.Write("\nInsira o novo status da tarefa:\n1 - Pendente\n2 - Em andamento\n3 - Concluído\nResposta: ");
+                        int opp = int.Parse(Console.ReadLine());
+                        tarefa.Status = opp;
+                        _tarefaController.ModificarTarefa(codigo,/*novaDescricao*/ tarefa.Status);
                         break;
                     case 0:
                         Environment.Exit(0);
