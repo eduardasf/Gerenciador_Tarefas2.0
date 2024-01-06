@@ -10,8 +10,12 @@ namespace GerenciadorTarefas
         {
             string connectionString = "Host=localhost;Port=5432;Database=Banco_Tarefas;Username=postgres;Password=398201;";
             TarefaController tarefaController = new TarefaController(connectionString);
-            TarefaView tarefaView = new TarefaView(tarefaController);
+            ClienteController clienteController = new ClienteController(connectionString);
+            ClienteView clienteView = new ClienteView();
+            TarefaView tarefaView = new TarefaView(tarefaController, clienteView, clienteController);
+            
             tarefaView.MenuTarefa();
+
         }
     }
 }
