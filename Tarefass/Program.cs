@@ -15,7 +15,6 @@ namespace GerenciadorTarefas
             TarefaView tarefaView = new TarefaView(tarefaController, clienteView, clienteController);
             
             tarefaView.MenuTarefa();
-
         }
     }
 }

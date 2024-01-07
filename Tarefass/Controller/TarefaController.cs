@@ -56,7 +56,7 @@ namespace Tarefass.Controller
                             string descricao = reader["descricao"].ToString();
                             string status = reader["status"].ToString();
 
-                            Console.WriteLine($"ID.......: {id}\nNome: {nome_Cliente}\nDescrição: {descricao}\nStatus: {status}");
+                            Console.WriteLine($"ID.......: {id}\nNome.....: {nome_Cliente}\nDescrição: {descricao}\nStatus...: {status}");
                             Console.WriteLine();
                         }
                     }
@@ -75,26 +75,29 @@ namespace Tarefass.Controller
                 {
                     command.Parameters.AddWithValue("id", id);
 
-                    int rowsAffected = command.ExecuteNonQuery();
+                   
+                        int rowsAffected = command.ExecuteNonQuery();
 
-                    if (rowsAffected > 0)
-                    {
-                        Console.WriteLine("\nTarefa excluída com sucesso!");
-                        Console.WriteLine();
-
-                        if (clienteId != -1)
+                        if (rowsAffected > 0)
                         {
-                            RemoverCliente(clienteId, connection);
+                            Console.WriteLine("\nTarefa excluída com sucesso!");
+                            Console.WriteLine();
+
+                            if (clienteId != -1)
+                            {
+                                RemoverCliente(clienteId, connection);
+                            }
                         }
-                    }
-                    else
-                    {
-                        Console.WriteLine("\nNenhuma tarefa encontrada com o ID especificado.");
-                        Console.WriteLine();
-                    }
+                        else
+                        {
+                            Console.WriteLine("\nNenhuma tarefa encontrada com o ID especificado.");
+                            Console.WriteLine();
+                        }
+                 
                 }
             }
         }
+
         private int ObterClienteIdPorTarefaId(int tarefaId, NpgsqlConnection connection)
         {
             using (var command = new NpgsqlCommand("SELECT cliente_id FROM tarefa.tarefa WHERE id = @id", connection))
@@ -133,7 +136,7 @@ namespace Tarefass.Controller
         }
 
 
-        public void ModificarTarefa(int id,int status)
+        public void ModificarTarefa(int id, int status)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
@@ -159,7 +162,6 @@ namespace Tarefass.Controller
                 }
             }
         }
-
     }
 }
 

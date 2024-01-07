@@ -47,7 +47,7 @@ namespace Tarefass.Controller
             {
                 connection.Open();
 
-                using (var command = new NpgsqlCommand("SELECT t.id, t.descricao, s.status " +"FROM tarefa.tarefa t " +"JOIN tarefa.status s ON t.status_id = s.id " +"WHERE t.cliente_id = @clienteId", connection))
+                using (var command = new NpgsqlCommand("SELECT t.id, t.descricao, s.status " + "FROM tarefa.tarefa t " + "JOIN tarefa.status s ON t.status_id = s.id " + "WHERE t.cliente_id = @clienteId", connection))
                 {
                     command.Parameters.AddWithValue("clienteId", clienteId);
 
@@ -81,7 +81,7 @@ namespace Tarefass.Controller
                             int id = Convert.ToInt32(reader["id"]);
                             string nome_Cliente = reader["nome"].ToString();
 
-                            Console.WriteLine($"ID.......: {id}\nNome: {nome_Cliente}");
+                            Console.WriteLine($"ID.......: {id}\nNome.....: {nome_Cliente}");
                             Console.WriteLine();
                         }
                     }
@@ -89,5 +89,21 @@ namespace Tarefass.Controller
             }
         }
 
+        public bool VerificarClienteExistente(int clienteId)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var command = new NpgsqlCommand("SELECT COUNT(*) FROM tarefa.cliente WHERE id = @clienteId", connection))
+                {
+                    command.Parameters.AddWithValue("clienteId", clienteId);
+
+                    int count = Convert.ToInt32(command.ExecuteScalar());
+
+                    return count > 0;
+                }
+            }
+        }
     }
 }

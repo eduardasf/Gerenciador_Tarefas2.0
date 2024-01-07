@@ -22,18 +22,35 @@ namespace Tarefass.View
             int opcao;
             do
             {
-                Console.Write("*****GERENCIADOR DE TAREFAS*****\n1 - Adicionar\n2 - Listar\n3 - Remover\n4 - Modificar status da tarefa\n5 - Pesquisar a partir do cliente\n0 - Sair\nDigite sua Resposta: ");
+                Console.Write("*****GERENCIADOR DE TAREFAS*****\n1 - Cadastrar Cliente\n2 - Adicionar Tarefa\n3 - Listar Tarefa\n4 - Remover Tarefa\n5 - Modificar status da tarefa\n6 - Pesquisar a partir do cliente\n7 - Listar Clientes\n0 - Sair\nDigite sua Resposta: ");
                 opcao = int.Parse(Console.ReadLine());
 
                 switch (opcao)
                 {
                     case 1:
                         Console.Clear();
+                        Console.WriteLine("***CADASTRO DO CLIENTE***");
+                        Console.WriteLine();
+                        _clienteController.AdicionarCliente(_clienteView.CadastrarCliente());
+                        break;
+                    case 2:
+                        Console.Clear();
                         Console.WriteLine("***ADICIONAR TAREFAS***");
-                        int clienteId = _clienteController.AdicionarCliente(_clienteView.CadastrarCliente());
+                        _clienteController.ListarCliente();
+                        Console.Write("Insira o código do cliente: ");
+                        int clienteId = -1;
 
-                        if (clienteId != -1)
+                        try
                         {
+                            clienteId = int.Parse(Console.ReadLine());
+
+                            if (!_clienteController.VerificarClienteExistente(clienteId))
+                            {
+                                Console.WriteLine("\nCliente com o ID especificado não encontrado. Não é possível cadastrar a tarefa.");
+                                Console.WriteLine();
+                                break;
+                            }
+
                             Console.Write("Insira a descrição da tarefa: ");
                             tarefa.Descricao = Console.ReadLine();
                             Console.Write("\nInsira o status da tarefa:\n1 - Pendente\n2 - Em andamento\n3 - Concluído\nResposta: ");
@@ -41,42 +58,95 @@ namespace Tarefass.View
                             tarefa.Status = op;
                             _tarefaController.AdicionarTarefa(tarefa.Descricao, tarefa.Status, clienteId);
                         }
-                        break;
-                    case 2:
-                        Console.Clear();
-                        _tarefaController.ListarTarefa();
+                        catch (FormatException)
+                        {
+                            Console.WriteLine("\nFormato inválido para o ID do cliente. Certifique-se de inserir um número inteiro.");
+                            Console.WriteLine();
+                        }
                         break;
                     case 3:
                         Console.Clear();
-                        _tarefaController.ListarTarefa();
-                        Console.WriteLine();
-                        Console.Write("Insira o código a ser removido: ");
-                        tarefa.Id = int.Parse(Console.ReadLine());
-                        _tarefaController.RemoverTarefa(tarefa.Id);
+                        try
+                        {
+                            _tarefaController.ListarTarefa();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"\nErro ao listar tarefas: {ex.Message}");
+                        }
                         break;
+
                     case 4:
                         Console.Clear();
-                        _tarefaController.ListarTarefa();
-                        Console.WriteLine();
-                        Console.WriteLine("***MODIFICAR STATUS DA TAREFA***");
-                        Console.Write("Insira o código da tarefa a ser modificada: ");
-                        int codigo = int.Parse(Console.ReadLine());
-                        Console.Write("\nInsira o novo status da tarefa:\n1 - Pendente\n2 - Em andamento\n3 - Concluído\nResposta: ");
-                        int opp = int.Parse(Console.ReadLine());
-                        tarefa.Status = opp;
-                        _tarefaController.ModificarTarefa(codigo,tarefa.Status);
+                        try
+                        {
+                            _tarefaController.ListarTarefa();
+                            Console.WriteLine();
+                            Console.Write("Insira o código a ser removido: ");
+                            tarefa.Id = int.Parse(Console.ReadLine());
+                            _tarefaController.RemoverTarefa(tarefa.Id);
+                        }
+                        catch (FormatException)
+                        {
+                            Console.WriteLine("\nFormato inválido para o ID da tarefa. Certifique-se de inserir um número inteiro.");
+                            Console.WriteLine();
+                        }
                         break;
+
                     case 5:
                         Console.Clear();
-                        _clienteController.ListarCliente();
-                        Console.WriteLine("***PESQUISAR POR NOME***");
-                        Console.Write("Insira o código do cliente: ");
-                        int clienteID = int.Parse(Console.ReadLine());
-                        _clienteController.ListarTarefasPorUsuario(clienteID);
+                        Console.WriteLine();
+                        Console.WriteLine("***MODIFICAR STATUS DA TAREFA***");
+                        try
+                        {
+                            _tarefaController.ListarTarefa();
+                            Console.Write("Insira o código da tarefa a ser modificada: ");
+                            int codigo = int.Parse(Console.ReadLine());
+                            Console.Write("\nInsira o novo status da tarefa:\n1 - Pendente\n2 - Em andamento\n3 - Concluído\nResposta: ");
+                            int opp = int.Parse(Console.ReadLine());
+                            tarefa.Status = opp;
+                            _tarefaController.ModificarTarefa(codigo, tarefa.Status);
+                        }
+                        catch (FormatException)
+                        {
+                            Console.WriteLine("\nFormato inválido para o ID da tarefa ou status. Certifique-se de inserir números inteiros.");
+                            Console.WriteLine();
+                        }
                         break;
+
+                    case 6:
+                        Console.Clear();
+                        Console.WriteLine("***PESQUISAR POR NOME***");
+                        try
+                        {
+                            _clienteController.ListarCliente();
+                            Console.Write("Insira o código do cliente: ");
+                            int clienteID = int.Parse(Console.ReadLine());
+                            _clienteController.ListarTarefasPorUsuario(clienteID);
+                        }
+                        catch (Exception)
+                        {
+                            Console.WriteLine("\nFormato inválido para o ID do cliente. Certifique-se de inserir um número inteiro.");
+                            Console.WriteLine();
+                        }
+                        break;
+
+                    case 7:
+                        Console.Clear();
+                        try
+                        {
+                            _clienteController.ListarCliente();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"\nErro ao listar clientes: {ex.Message}");
+                        }
+                        break;
+
                     case 0:
                         Environment.Exit(0);
                         break;
+
                     default:
                         Console.Clear();
                         Console.WriteLine("Opção inválida, tente novamente!");
